@@ -1,5 +1,5 @@
 {
-  "name": "buildkit-treeglob",
+  "name": "buildkit-globber",
   "license": "GPL-3.0",
   "description": "Buildkit file globbing utility",
   "repository": {
