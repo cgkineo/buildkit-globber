@@ -1,0 +1,16 @@
+{
+  "name": "buildkit-treeglob",
+  "license": "GPL-3.0",
+  "description": "Buildkit file globbing utility",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cgkineo/buildkit-treeglob.git"
+  },
+  "version": "0.1.1",
+  "dependencies": {
+    "osenv": "~0.1.3",
+    "minimatch": "~3.0.0",
+    "path": "~0.12.7",
+    "handlebars": "~4.0.5"
+  }
+}
