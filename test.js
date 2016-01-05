@@ -1,10 +1,14 @@
+"use strict";
+
 //import library
-var pathext = require("./index.js");
+var GlobCollection = require("./index.js").GlobCollection;
+var TreeContext = require("./index.js").TreeContext;
+var Location = require("./index.js").Location;
 
 //create sample glob collections for Adapt Learning
 
 //search for all javascript and nested javascript inside each plugin and the core
-var Javascript = new pathext.GlobCollection([
+var Javascript = new GlobCollection([
 	"src/*/*/js/*.js",
 	"src/*/*/js/**/*.js",
 	"src/core/js/*.js",
@@ -12,7 +16,7 @@ var Javascript = new pathext.GlobCollection([
 ]);
 
 //search for all handlebars and nested handlebars inside each plugin and the core
-var Handlebars = new pathext.GlobCollection([
+var Handlebars = new GlobCollection([
 	"src/*/*/templates/*.hbs",
 	"src/*/*/templates/**/*.hbs",
 	"src/core/templates/*.hbs",
@@ -20,7 +24,7 @@ var Handlebars = new pathext.GlobCollection([
 ]);
 
 //search for all less and nested less inside each plugin and the core
-var Less = new pathext.GlobCollection([
+var Less = new GlobCollection([
 	"src/*/*/less/*.less",
 	"src/*/*/less/**/*.less",
 	"src/core/less/*.less",
@@ -28,12 +32,12 @@ var Less = new pathext.GlobCollection([
 ]);
 
 //ignore the build folder
-var BuildIgnores = new pathext.GlobCollection([
+var BuildIgnores = new GlobCollection([
 	"!build"
 ]);
 
 //ignore hidden files and the node_modules folder
-var GeneralIgnores = new pathext.GlobCollection([
+var GeneralIgnores = new GlobCollection([
 	"!**/.*",
 	"!.*",
 	"!node_modules",
@@ -41,7 +45,7 @@ var GeneralIgnores = new pathext.GlobCollection([
 ]);
 
 //create tree context
-var TreeContext = new pathext.TreeContext({
+var TreeContext = new TreeContext({
 	files: true,
 	dirs: true,
 	cache:true

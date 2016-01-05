@@ -5,6 +5,27 @@ Buildkit file globbing utility
 Returns arrays of file and directory properties according to globs and a tree.
 Performs file and directory change watching according to globs and a tree.
 
+## Use
+1. Install buildkit-globber
+```
+npm install --save buildkit-globber
+```
+2. Require
+```
+//node v4
+var GlobCollection = require("buildkit-globber").GlobCollection;
+var TreeContext = require("buildkit-globber").TreeContext;
+var Location = require("buildkit-globber").Location;
+var MATCH_TYPE = require("buildkit-globber").MATCH_TYPE;
+
+
+//node v5+
+var {GlobCollection, TreeContext, Location, MATCH_TYPE} = require("buildkit-globber");
+```
+3. Use API.
+See below.
+
+
 ## Glob
 A description of the files / directories expected.
 
@@ -92,5 +113,38 @@ var Tree = TreeContext.Tree(".","/working/project_number");
 	WatchObject.start();
 	WatchObject.stop();
 
+
+```
+
+## Location Object
+```
+
+	var srcTree = new Location("src", ".");
+	srcTree.populate({cache: true});
+
+	srcTree.doesExist;
+	srcTree.isFile;
+	srcTree.isDir;
+	srcTree._isPopulated;
+	srcTree._populatedTimeStamp;
+	srcTree.depth;
+	srcTree.dirname;
+	srcTree.filename;
+	srcTree.extname;
+	srcTree.basename;
+	srcTree.relativeLocation;
+	srcTree.location;
+	srcTree.relativeTo;
+	srcTree.birthtime;
+	srcTree.ctime;
+	srcTree.mtime;
+	srcTree.size;
+
+
+	Location.toAbsolute(string location, [string relativeTo]);
+	Location.cwd();
+	Location.home();
+	Location.contextReplace(string handlebars, object context);
+	Location.convertToPosixSlashes(string location);
 
 ```
