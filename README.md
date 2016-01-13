@@ -6,11 +6,11 @@ Returns arrays of file and directory properties according to globs and a tree.
 Performs file and directory change watching according to globs and a tree.
 
 ## Use
-1. Install buildkit-globber
+a. Install buildkit-globber
 ```
 npm install --save buildkit-globber
 ```
-2. Require
+b. Require
 ```
 //node v4
 var GlobCollection = require("buildkit-globber").GlobCollection;
@@ -30,7 +30,7 @@ var {GlobCollection,
 	FileSystem,
 	MATCH_TYPE} = require("buildkit-globber");
 ```
-3. Use API.
+c. Use API.
 See below.
 
 
