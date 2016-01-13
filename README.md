@@ -15,12 +15,20 @@ npm install --save buildkit-globber
 //node v4
 var GlobCollection = require("buildkit-globber").GlobCollection;
 var TreeContext = require("buildkit-globber").TreeContext;
+var WatchCollection = require("buildkit-globber").WatchCollection;
+var FileSystem = require("buildkit-globber").FileSystem;
 var Location = require("buildkit-globber").Location;
 var MATCH_TYPE = require("buildkit-globber").MATCH_TYPE;
 
 
 //node v5+
-var {GlobCollection, TreeContext, Location, MATCH_TYPE} = require("buildkit-globber");
+var {GlobCollection,
+	TreeContext,
+	Tree,
+	WatchCollection,
+	Location,
+	FileSystem,
+	MATCH_TYPE} = require("buildkit-globber");
 ```
 3. Use API.
 See below.
@@ -37,16 +45,29 @@ A description of the files / directories expected.
 "!node_modules" // not the immediate node_modules folder
 "!**/node_modules" // no any sub node_modules folder
 
-var Globs = new GlobCollection([
+var globs = new GlobCollection([
 	"src/*/js/*.js",
 	"src/*/js/**/*.js",
 	"!**/.*"
 ]);
 
-var Ignores = new GlobCollection([
+var ignores = new GlobCollection([
 	"!node_modules",
 	"!**/node_modules"
 ]);
+
+```
+
+##Tree Context
+An collection of options for a group of Tree objects.
+```
+var treecontext = new TreeContext({
+	files: true,
+	dirs: true,
+	cache: true
+});
+
+treecontext.clearCache();
 
 ```
 
@@ -55,13 +76,12 @@ var Ignores = new GlobCollection([
 A directory "." relative to another directory "/home/user/Destkop".
 
 ```
+var tree = treecontext.Tree(".","/working/project_number");
 
-var TreeContext = new TreeContext({
-	files: true,
-	dirs: true,
-	cache: true
-});
-var Tree = TreeContext.Tree(".","/working/project_number");
+tree.dirs;
+tree.files;
+tree.subtrees;
+tree.TreeContext;
 
 ```
 
@@ -70,48 +90,49 @@ var Tree = TreeContext.Tree(".","/working/project_number");
 ```
 	
 	//fetch all files + dirs in tree by globs:
-	var LocationObjects = Tree.mapGlobs(Globs, Ignores);
+	var locationObjects = tree.mapGlobs(globs, ignores);
 
-	LocationObjects.files[0-x].relativeLocation;
-	LocationObjects.files[0-x].ctime;
-	LocationObjects.files[0-x].mtime;
-	LocationObjects.files[0-x].size;
-	LocationObjects.files[0-x].isFile;
-	LocationObjects.files[0-x].isDir;
-	LocationObjects.files[0-x].basename;
-	LocationObjects.files[0-x].extname;
-	LocationObjects.files[0-x].filename;
-	LocationObjects.files[0-x].dirname;
-	LocationObjects.files[0-x].depth;
-	LocationObjects.files[0-x].location;
-	LocationObjects.files[0-x].relativeTo;
+	locationObjects.files[0-x].relativeLocation;
+	locationObjects.files[0-x].ctime;
+	locationObjects.files[0-x].mtime;
+	locationObjects.files[0-x].size;
+	locationObjects.files[0-x].isFile;
+	locationObjects.files[0-x].isDir;
+	locationObjects.files[0-x].basename;
+	locationObjects.files[0-x].extname;
+	locationObjects.files[0-x].filename;
+	locationObjects.files[0-x].dirname;
+	locationObjects.files[0-x].depth;
+	locationObjects.files[0-x].location;
+	locationObjects.files[0-x].relativeTo;
 
-	LocationObjects.dirs[0-x].relativeLocation;
-	LocationObjects.dirs[0-x].ctime;
-	LocationObjects.dirs[0-x].mtime;
-	LocationObjects.dirs[0-x].size;
-	LocationObjects.dirs[0-x].isFile;
-	LocationObjects.dirs[0-x].isDir;
-	LocationObjects.dirs[0-x].basename;
-	LocationObjects.dirs[0-x].extname;
-	LocationObjects.dirs[0-x].filename;
-	LocationObjects.dirs[0-x].dirname;
-	LocationObjects.dirs[0-x].depth;
-	LocationObjects.dirs[0-x].location;
-	LocationObjects.dirs[0-x].relativeTo;
+	locationObjects.dirs[0-x].relativeLocation;
+	locationObjects.dirs[0-x].ctime;
+	locationObjects.dirs[0-x].mtime;
+	locationObjects.dirs[0-x].size;
+	locationObjects.dirs[0-x].isFile;
+	locationObjects.dirs[0-x].isDir;
+	locationObjects.dirs[0-x].basename;
+	locationObjects.dirs[0-x].extname;
+	locationObjects.dirs[0-x].filename;
+	locationObjects.dirs[0-x].dirname;
+	locationObjects.dirs[0-x].depth;
+	locationObjects.dirs[0-x].location;
+	locationObjects.dirs[0-x].relativeTo;
 
 
 
 	//watch all files + dirs in tree by globs:
-	var WatchObject = Tree.watchGlobs(Globs, Ignore);
-	WatchObject.on("change", function(tree, files, dirs) {
+	var watchObject = tree.watchGlobs(globs, ignores);
+	watchObject.on("change", function(tree, files, dirs) {
 
 		files[0-x].location.ctime;
 		files[0-x].change = "updated/deleted/created";
 
 	});
-	WatchObject.start();
-	WatchObject.stop();
+	watchObject.start();
+	watchObject.stop();
+	watchObject.start();
 
 
 ```
@@ -119,32 +140,77 @@ var Tree = TreeContext.Tree(".","/working/project_number");
 ## Location Object
 ```
 
-	var srcTree = new Location("src", ".");
-	srcTree.populate({cache: true});
+	var location = new Location("src", ".");
+	location.populate({cache: true});
 
-	srcTree.doesExist;
-	srcTree.isFile;
-	srcTree.isDir;
-	srcTree._isPopulated;
-	srcTree._populatedTimeStamp;
-	srcTree.depth;
-	srcTree.dirname;
-	srcTree.filename;
-	srcTree.extname;
-	srcTree.basename;
-	srcTree.relativeLocation;
-	srcTree.location;
-	srcTree.relativeTo;
-	srcTree.birthtime;
-	srcTree.ctime;
-	srcTree.mtime;
-	srcTree.size;
+	location.doesExist;
+	location.isFile;
+	location.isDir;
+	location._isPopulated;
+	location._populatedTimeStamp;
+	location.depth;
+	location.dirname;
+	location.filename;
+	location.extname;
+	location.basename;
+	location.relativeLocation;
+	location.location;
+	location.relativeTo;
+	location.birthtime;
+	location.ctime;
+	location.mtime;
+	location.size;
+	location.clone();
+	location.populate();
+
 
 
 	Location.toAbsolute(string location, [string relativeTo]);
+	Location.toRelative(string location, [string relativeTo]);
 	Location.cwd();
 	Location.home();
 	Location.contextReplace(string handlebars, object context);
 	Location.convertToPosixSlashes(string location);
+
+```
+
+##Watch Collection Object
+```
+	var watches = new WatchCollection();
+
+	watches.push(watchObject);
+
+	watches.start();
+	watches.stop();
+	watches.start();
+
+```
+
+##MATCH_TYPE
+```
+
+	MATCH_TYPE.NOTMATCHED = 0;
+	MATCH_TYPE.NOTMATCHED.toString() = "NOTMATCHED";
+	MATCH_TYPE.DESCEND = 1;
+	MATCH_TYPE.DESCEND.toString() = "DESCEND";
+	MATCH_TYPE.NOTEXCLUDED = 2;
+	MATCH_TYPE.NOTEXCLUDED.toString() = "NOTEXCLUDED";
+	MATCH_TYPE.MATCHED = 3;
+	MATCH_TYPE.MATCHED.toString() = "MATCHED";
+	MATCH_TYPE.MATCHED_DESCEND = 4;
+	MATCH_TYPE.MATCHED_DESCEND.toString() = "MATCHED_DESCEND";
+
+```
+
+##FileSystem Object
+```
+
+	FileSystem.collate(string from, string to, string at, Array copyGlobs, Array destGlobs, function callback);
+	FileSystem.copy(string from, string to, Array copyGlobs, function callback);
+	FileSystem.mkdir(string dest);
+	FileSystem.remove(string dest, Array removeGlobs);
+	FileSystem.rm(string path);
+
+
 
 ```
