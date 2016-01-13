@@ -78,6 +78,20 @@ A directory "." relative to another directory "/home/user/Destkop".
 ```
 var tree = treecontext.Tree(".","/working/project_number");
 
+tree.populate();
+
+tree.dirs;
+tree.files;
+tree.subtrees;
+tree.TreeContext;
+
+```
+Alternatively, without a treecontext
+```
+var tree = new Tree(".","/working/project_number");
+
+tree.populate();
+
 tree.dirs;
 tree.files;
 tree.subtrees;
